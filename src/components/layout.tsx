@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactNode } from "react";
 import Link from "next/link";
-// import { useAuth } from "src/auth/useAuth";
+import { useAuth } from "src/auth/useAuth";
 
 // because typescript is in strict mode we need to declare the type of each item
 interface IProps {
@@ -8,8 +8,8 @@ interface IProps {
 }
 
 const Layout: FunctionComponent<IProps> = ({ main }) => {
-    const authenticated = false;
-    const logout = () => null;
+    const {logout, authenticated} = useAuth();
+
 
     return <div className="bg-gray-900 max-w-screen-2xl mx-auto text-white">
         <nav className=" bg-gray-800" style={{ height: "64px" }}>

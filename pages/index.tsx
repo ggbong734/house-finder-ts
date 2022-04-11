@@ -9,6 +9,7 @@ import Layout from "src/components/layout";
 // import { HousesQuery, HousesQueryVariables } from "src/generated/HousesQuery";
 
 // layout is a component that receives a prop div
+// this component is a subcomponent that lives in the _app file
 export default function Home() {
   return <Layout main={<div>Home</div>} />;
 }
