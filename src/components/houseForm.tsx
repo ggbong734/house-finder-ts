@@ -27,6 +27,7 @@ interface IProps { }
 
 export default function HouseForm({ }: IProps) {
     const [submitting, setSubmitting] = useState(false);
+    const [previewImage, setPreviewImage] = useState<string>();
     const { register, handleSubmit, setValue, errors, watch } = useForm<IFormData>({
         defaultValues: {}
     });
@@ -62,5 +63,34 @@ export default function HouseForm({ }: IProps) {
                 {errors.address && <p>errors.address.message</p>}
                 <h2>{address}</h2>
             </div>
+            <div className="mt-4">
+                <label htmlFor="image" className="p-4 border-dashed border-4 border-gray-600
+                block cursor-pointer"> Click to add image (16:9)
+                </label>
+                <input
+                    id="image"
+                    name="image"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    ref={register({
+                        validate: (fileList: FileList) => {
+                            if (fileList.length === 1) return true;
+                            return "Please upload one file";
+                        }
+                    })}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                        if (event?.target?.files?.[0]) {
+                            const file = event.target.files[0];
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                setPreviewImage(reader.result as string);
+                            }
+                            reader.readAsDataURL(file)
+                        }
+                    }}
+                />
+            </div>
+            {previewImage}
         </form>)
 };
