@@ -47,13 +47,21 @@ function ReadySearchBox({ onSelectAddress, defaultValue }: ISearchBoxProps) {
         clearSuggestions } = usePlacesAutocomplete({ debounce: 300, defaultValue }) //wait for 300 ms before making a request to user
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value);
+        setValue(e.target.value); //setValue is from usePlacesAutocomplete API
         if (e.target.value === "") {
             onSelectAddress("", null, null);
         }
     };
     const handleSelect = async (address: string) => {
-        console.log({ address });
+        setValue(address, false);
+        clearSuggestions();
+        try {
+            const results = await getGeocode({ address });
+            const { lat, lng } = await getLatLng(results[0]);
+            onSelectAddress(address, lat, lng);
+        } catch (error) {
+            console.error(`Error: `, error);
+        }
     };
 
     // console.log({ status, data });
