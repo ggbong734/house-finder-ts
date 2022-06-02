@@ -16,6 +16,7 @@ const server = new ApolloServer({
       prisma,
     };
   },
+  tracing: process.env.NODE_ENV === "development",
 });
 
 const handler = server.createHandler({ path: "/api/graphql" });
