@@ -2,14 +2,14 @@ import { isRequiredArgument } from "graphql";
 import { useState, useEffect, ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, gql } from "@apollo/client";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
 // import { Image } from "cloudinary-react";
 import { SearchBox } from "./searchBox";
-// import {
-//   CreateHouseMutation,
-//   CreateHouseMutationVariables,
-// } from "src/generated/CreateHouseMutation";
+import {
+    CreateHouseMutation,
+    CreateHouseMutationVariables,
+} from "src/generated/CreateHouseMutation";
 // import {
 //   UpdateHouseMutation,
 //   UpdateHouseMutationVariables,
@@ -25,6 +25,15 @@ mutation CreateSignatureMutation {
         timestamp
     }
 }`;
+
+const CREATE_HOUSE_MUTATION = gql`
+    mutation CreateHouseMutation($input: HouseInput!) {
+        createHouse(input: $input) {
+            id
+        }
+    }
+`;
+
 
 interface IUploadImageResponse {
     secure_url: string;
@@ -56,6 +65,8 @@ interface IFormData {
 interface IProps { }
 
 export default function HouseForm({ }: IProps) {
+    const router = useRouter();
+
     const [submitting, setSubmitting] = useState(false);
     const [previewImage, setPreviewImage] = useState<string>();
     const { register, handleSubmit, setValue, errors, watch } = useForm<IFormData>({
@@ -64,6 +75,9 @@ export default function HouseForm({ }: IProps) {
     const address = watch("address");
     //create use mutation hook
     const [createSignature] = useMutation<CreateSignatureMutation>(SIGNATURE_MUTATION)
+    const [createHouse] = useMutation<
+        CreateHouseMutation,
+        CreateHouseMutationVariables>(CREATE_HOUSE_MUTATION);
 
     useEffect(() => {
         register({ name: "address" }, { required: "Please enter your addrress" });
@@ -78,6 +92,25 @@ export default function HouseForm({ }: IProps) {
             const { signature, timestamp } = signatureData.createImageSignature;
             const imageData = await uploadImage(data.image[0], signature, timestamp);
             // const imageUrl = imageData.secure_url;
+            const { data: houseData } = await createHouse({
+                variables: {
+                    input: {
+                        address: data.address,
+                        image: imageData.secure_url,
+                        coordinates: {
+                            latitude: data.latitude,
+                            longitude: data.longitude
+                        },
+                        bedrooms: parseInt(data.bedrooms, 10),
+                    },
+                },
+            });
+            if (houseData?.createHouse) {
+                router.push(`/houses/${houseData.createHouse.id}`);
+            } else {
+                // should have validated data and made sure user is authenticated
+                // so if any error we can show it here maybe a popup or toast
+            }
         }
 
     };
