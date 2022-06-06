@@ -51,7 +51,7 @@ class House {
   id!: number;
 
   @Field((_type) => String)
-  userid!: string;
+  userId!: string;
 
   @Field((_type) => Float)
   latitude!: number;
@@ -77,6 +77,12 @@ class House {
 
 @Resolver()
 export class HouseResolver {
+  @Query((_returns) => House, { nullable: true })
+  async house(@Arg("id") id: string, @Ctx() ctx: Context) {
+    // no need authorized context to load a house
+    return ctx.prisma.house.findOne({ where: { id: parseInt(id) } });
+  }
+
   // async because we write data to database
   @Authorized()
   @Mutation((_returns) => House, { nullable: true }) // when we call this function when not authorized it returns null

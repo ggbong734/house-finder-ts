@@ -16,7 +16,7 @@ type House {
   latitude: Float!
   longitude: Float!
   publicId: String!
-  userid: String!
+  userId: String!
 }
 
 input HouseInput {
@@ -38,4 +38,5 @@ type Mutation {
 
 type Query {
   hello: String!
+  house(id: String!): House
 }
