@@ -10,7 +10,7 @@
 export interface ShowHouseQuery_house {
   __typename: "House";
   id: string;
-  userid: string;
+  userId: string;
   address: string;
   publicId: string;
   bedrooms: number;

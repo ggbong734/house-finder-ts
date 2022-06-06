@@ -14,7 +14,7 @@ const SHOW_HOUSE_QUERY = gql`
   query ShowHouseQuery($id: String!) {
     house(id: $id) {
       id
-      userid
+      userId
       address
       publicId
       bedrooms
