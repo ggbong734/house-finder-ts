@@ -13,7 +13,7 @@ import {
     ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-// new comment for github commit dds
+// new comment for github commit ddsh
 interface ISearchBoxProps {
     onSelectAddress: (address: string, latitude: number | null, longitude: number | null) => void;
     defaultValue: string;
