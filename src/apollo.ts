@@ -15,7 +15,7 @@ function createApolloClient() {
 }
 
 export function useApollo() {
-  // use Memo avoids calling create Client multiple times if it has been called before
+  // use Memo avoids calling create Client multiple times if it has been called before s
   const client = useMemo(() => createApolloClient(), []);
   return client;
 }
